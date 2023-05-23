@@ -1,18 +1,23 @@
 import streamlit as st
 from streamlit_lottie import st_lottie
-import requests
 import pandas as pd
 import pickle
 from typing import List
 import json
+import os
+
 st.set_page_config(layout="wide", page_title="Diabetes Prediction",
                    page_icon="💊", initial_sidebar_state="auto")
 
 
 # Load the models and transformers once
-MODEL_PATH = 'C:/Users/smartcopper/Desktop/PycharmProjects/projects/diabetes/forest_diabetes.pkl'
-ONEHOT_PATH = 'C:/Users/smartcopper/Desktop/PycharmProjects/projects/diabetes/onehot_diabetes.pkl'
-SCALER_PATH = 'C:/Users/smartcopper/Desktop/PycharmProjects/projects/diabetes/scaler_diabetes.pkl'
+current_dir = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(current_dir, 'forest_diabetes.pkl')
+ONEHOT_PATH = os.path.join(current_dir, 'onehot_diabetes.pkl')
+SCALER_PATH = os.path.join(current_dir, 'scaler_diabetes.pkl')
+
+# Load the picture
+lottie_pic= os.path.join(current_dir, 'lottie file hospital report.json')
 
 with open(MODEL_PATH, 'rb') as f:
     model = pickle.load(f)
@@ -22,6 +27,9 @@ with open(ONEHOT_PATH, 'rb') as f:
 
 with open(SCALER_PATH, 'rb') as f:
     scaler = pickle.load(f)
+
+with open(lottie_pic, 'rb') as f:
+    pic = json.load(f)
 
 cat_col = ['gender', 'smoking_history']
 num_col = ['age', 'bmi', 'hemoglobin_level', 'blood_glucose_level']
@@ -33,8 +41,7 @@ col1,col2=st.columns([3,1])
 with col1:
      st.header('This is a simple app to predict diabetes')
 with col2:
-    st_lottie(json.load(open('C:/Users/smartcopper/Desktop/PycharmProjects/projects/diabetes/lottie file hospital report.json')),
-                height=200,quality='medium',key="lottie")
+    st_lottie(pic,height=200,quality='medium',key="lottie")
 
 with st.form(key='my_form'):
     col1,col2=st.columns([1,1],gap='large')
